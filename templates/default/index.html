@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>jQuery Knob demo</title>
+    <script src="/static/js/vendor/jquery.min.js"></script>
+    <!--[if IE]><script type="text/javascript" src="/static/js/vendor/knob/excanvas.js"></script><![endif]-->
+    <script src="/static/js/vendor/knob/dist/jquery.knob.min.js"></script>
+    <style type="text/css">
+        body {
+            font-family: 'Droid Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: #000;
+            font-size: 16px;
+        }
+    </style>
+    <script>
+        $(function ($) {
+            $(".knob").knob({
+                draw: function () {
+                    // "tron" case
+                    if (this.$.data('skin') == 'tron') {
+                        this.cursorExt = 0.3;
+                        var a = this.arc(this.cv)  // Arc
+                                , pa                   // Previous arc
+                                , r = 1;
+                        this.g.lineWidth = this.lineWidth;
+                        if (this.o.displayPrevious) {
+                            pa = this.arc(this.v);
+                            this.g.beginPath();
+                            this.g.strokeStyle = this.pColor;
+                            this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, pa.s, pa.e, pa.d);
+                            this.g.stroke();
+                        }
+                        this.g.beginPath();
+                        this.g.strokeStyle = r ? this.o.fgColor : this.fgColor;
+                        this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, a.s, a.e, a.d);
+                        this.g.stroke();
+                        this.g.lineWidth = 2;
+                        this.g.beginPath();
+                        this.g.strokeStyle = this.o.fgColor;
+                        this.g.arc(this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false);
+                        this.g.stroke();
+                        return false;
+                    }
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+<div style="color:#EEE;height:420px;width:100%">
+    <div style="position:relative;width:350px;margin:auto">
+        <div style="position:absolute;left:60px;top:60px">
+            <input class="knob minute" data-min="0" data-max="60" data-bgColor="#333" data-displayInput=false
+                   data-width="200" data-height="200" data-thickness=".45">
+        </div>
+        <div style="position:absolute;left:110px;top:110px">
+            <input class="knob second" data-min="0" data-max="60" data-bgColor="#333" data-fgColor="rgb(127, 255, 0)"
+                   data-displayInput=false data-width="100" data-height="100" data-thickness=".3">
+        </div>
+    </div>
+</div>
+<div style="clear:both"></div>
+<script>
+    function clock() {
+        var $s = $(".second"),
+                $m = $(".minute"),
+                $h = $(".hour");
+        d = new Date(),
+                s = d.getSeconds(),
+                m = d.getMinutes(),
+                h = d.getHours();
+        $s.val(s).trigger("change");
+        $m.val(m).trigger("change");
+        $h.val(h).trigger("change");
+        setTimeout("clock()", 1000);
+    }
+    clock();
+</script>
+</body>
+</html>
